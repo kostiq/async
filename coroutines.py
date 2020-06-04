@@ -1,9 +1,8 @@
 import asyncio
 import curses
-import itertools
 
 from cursed_tools import draw_frame
-from tools import get_spaceship_frames, modified_coordinates
+from tools import read_frames, get_updated_spaceship_coordinates, get_frame_sequence
 
 
 async def async_sleep(seconds):
@@ -59,11 +58,13 @@ async def fire(canvas, start_row, start_column, rows_speed=-0.3, columns_speed=0
 
 
 async def animate_spaceship(canvas, row, column):
-    frames = get_spaceship_frames()
-    for frame in itertools.cycle(frames):
+    frames = read_frames()
+
+    for frame in get_frame_sequence(frames):
         draw_frame(canvas, row, column, frame)
+
         await asyncio.sleep(0)
 
         draw_frame(canvas, row, column, frame, negative=True)
 
-        row, column = modified_coordinates(canvas, row, column, frame)
+        row, column = get_updated_spaceship_coordinates(canvas, row, column, frame)

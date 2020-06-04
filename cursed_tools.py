@@ -5,7 +5,7 @@ UP_KEY_CODE = 259
 DOWN_KEY_CODE = 258
 
 
-def read_controls(canvas, multiplier=1):
+def read_controls(canvas):
     """Read keys pressed and returns tuple witl controls state."""
 
     rows_direction = columns_direction = 0
@@ -33,7 +33,7 @@ def read_controls(canvas, multiplier=1):
         if pressed_key_code == SPACE_KEY_CODE:
             space_pressed = True
 
-    return rows_direction * multiplier, columns_direction * multiplier, space_pressed
+    return rows_direction, columns_direction, space_pressed
 
 
 def draw_frame(canvas, start_row, start_column, text, negative=False):
