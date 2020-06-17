@@ -89,6 +89,7 @@ async def fly_garbage(canvas, column, garbage_frame, speed=0.5):
     while row < rows_number:
         if uid in obstacles_in_last_collisions:
             obstacles_in_last_collisions.remove(uid)
+            obstacles.pop(uid)
             await explode(canvas, row, column)
             return
 
@@ -99,6 +100,8 @@ async def fly_garbage(canvas, column, garbage_frame, speed=0.5):
         draw_frame(canvas, row, column, garbage_frame, negative=True)
         row += speed
 
+    obstacles.pop(uid)
+
 
 async def fill_orbit_with_garbage(canvas):
     frames = read_garbage_frames()
@@ -107,11 +110,11 @@ async def fill_orbit_with_garbage(canvas):
     while True:
         garbage_delay = get_garbage_delay_tics(year)
 
-        if garbage_delay:
-            await sleep(garbage_delay / 10)
-        else:
+        if not garbage_delay:
             await sleep(0.1)
             continue
+
+        await sleep(garbage_delay / 10)
 
         garbage = fly_garbage(canvas, column=random.randint(0, columns_number), garbage_frame=random.choice(frames))
         coroutines.append(garbage)
@@ -144,6 +147,7 @@ async def print_info(canvas):
     while True:
         phrase = PHRASES.get(year) or phrase
         canvas.addstr(1, 1, '{}: {}'.format(year, phrase))
+        canvas.addstr(10, 1, 'len {}'.format(len(obstacles)))
         await sleep(0.1)
 
 

@@ -48,18 +48,11 @@ def get_updated_coordinates(canvas, frame, row, column, row_speed, column_speed)
     row_direction, column_direction, space_pressed = read_controls(canvas)
     row_speed, column_speed = update_speed(row_speed, column_speed, row_direction, column_direction)
 
-    frame_row, frame_col = get_frame_size(frame)
+    rows_in_frame, columns_in_frame = get_frame_size(frame)
     rows_number, columns_number = canvas.getmaxyx()
 
-    if row_speed < 0:
-        row = max(row + row_speed, 0)
-    elif row_speed > 0:
-        row = min(row + row_speed, rows_number - frame_row)
-
-    if column_speed < 0:
-        column = max(column + column_speed, 0)
-    elif column_speed > 0:
-        column = min(column + column_speed, columns_number - frame_col)
+    row = min(max(row + row_speed, 0), rows_number - rows_in_frame)
+    column = min(max(column + column_speed, 0), columns_number - columns_in_frame)
 
     return row, column, row_speed, column_speed, space_pressed
 
